@@ -27,7 +27,7 @@ class Kelas extends Model
         return $this->hasMany(JadwalKelas::class);
     }
     public function semester()
-{
-    return $this->belongsTo(Semester::class);
-}
+    {
+        return $this->belongsTo(Semester::class);
+    }
 }

@@ -6,6 +6,12 @@
     </x-slot>
     <div class="py-4 px-4 text-black border-rounded-md mx-left-4 bg-white">
         <p>Managemen Kelas</p>
+        @if(auth()->user()->role === 'admin')
+        <a href="{{ route('kelas.create') }}"
+            class="bg-green-600 text-black px-4 py-2 rounded hover:bg-green-700">
+            Tambah Kelas
+        </a>
+        @endif
     </div>
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -31,6 +37,8 @@
     </div>
 
     <script>
+        const userRole = "{{ auth()->user()->role }}";
+
         async function loadKelas() {
             const res = await fetch('/kelas-api');
             const data = await res.json();
@@ -38,21 +46,27 @@
             tbody.innerHTML = '';
 
             data.forEach(kelas => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td class="border px-4 py-2">${kelas.id}</td>
-                        <td class="border px-4 py-2">${kelas.name}</td>
-                        <td class="border px-4 py-2">${kelas.kode_kelas}</td>
-                        <td class="border px-4 py-2">${kelas.guru?.name ?? '-'}</td>
-                        <td class="border px-4 py-2">
-                            <button class="bg-blue-500 text-white px-3 py-1 rounded">Edit</button>
-                            <button class="bg-red-500 text-white px-3 py-1 rounded">Hapus</button>
-                        </td>
-                    </tr>
+                let aksi = '';
+                if (userRole === 'admin') {
+                    aksi = `
+                    <button class="bg-blue-500 text-white px-3 py-1 rounded mr-2">Edit</button>
+                    <button class="bg-red-500 text-white px-3 py-1 rounded">Hapus</button>
                 `;
+                }
+
+                tbody.innerHTML += `
+                <tr>
+                    <td class="border px-4 py-2">${kelas.id}</td>
+                    <td class="border px-4 py-2">${kelas.name}</td>
+                    <td class="border px-4 py-2">${kelas.kode_kelas}</td>
+                    <td class="border px-4 py-2">${kelas.guru?.name ?? '-'}</td>
+                    ${aksi ? `<td class="border px-4 py-2">${aksi}</td>` : ''}
+                </tr>
+            `;
             });
         }
 
         loadKelas();
     </script>
+
 </x-app-layout>

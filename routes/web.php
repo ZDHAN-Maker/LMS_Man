@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KelasController;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -23,7 +24,15 @@ Route::middleware(['auth'])->group(function () {
     })->name('kelas');
 
     // API CRUD Kelas
-    Route::resource('kelas-api', KelasController::class);
+    // API CRUD Kelas, disesuaikan dengan controller
+    Route::prefix('api')->group(function () {
+        Route::get('kelas', [KelasController::class, 'index']);      // semua login
+        Route::get('kelas/{id}', [KelasController::class, 'show']);  // semua login
+        Route::post('kelas', [KelasController::class, 'store']);     // hanya admin
+        Route::put('kelas/{id}', [KelasController::class, 'update']); // hanya admin
+        Route::delete('kelas/{id}', [KelasController::class, 'destroy']); // hanya admin
+        
+    });
 });
 
 
